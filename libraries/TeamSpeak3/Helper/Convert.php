@@ -61,11 +61,19 @@ class TeamSpeak3_Helper_Convert
    * @param  string  $format
    * @return string
    */
-  public static function seconds($seconds, $is_ms = FALSE, $format = "%dD %02d:%02d:%02d")
+  public static function seconds($seconds, $is_ms = FALSE, $format = "%d %s %02d:%02d:%02d")
   {
     if($is_ms) $seconds = $seconds/1000;
-
-    return sprintf($format, $seconds/60/60/24, ($seconds/60/60)%24, ($seconds/60)%60, $seconds%60);
+	function format_by_count($count, $form1, $form2, $form3)
+	{
+    $count = abs($count) % 100;
+    $lcount = $count % 10;
+    if ($count >= 11 && $count <= 19) return($form3);
+    if ($lcount >= 2 && $lcount <= 4) return($form2);
+    if ($lcount == 1) return($form1);
+    return $form3;
+	}
+    return sprintf($format, $seconds/60/60/24, format_by_count($seconds/60/60/24, 'день', 'дня', 'дней'), ($seconds/60/60)%24, ($seconds/60)%60, $seconds%60);
   }
 
   /**
